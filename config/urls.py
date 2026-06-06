@@ -8,7 +8,7 @@ urlpatterns = [
     path('', include('portfolio.urls')),
 ]
 
-# Always serve media files from MEDIA_URL on local development hosts.
+# Serve media files in all environments
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

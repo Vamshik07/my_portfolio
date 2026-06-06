@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: portfolio
+    runtime: python
+    plan: free
+    buildCommand: './build.sh'
+    startCommand: 'gunicorn config.wsgi'
+    envVars:
+      - key: DEBUG
+        value: 'False'
+      - key: PYTHON_VERSION
+        value: '3.11.7'
