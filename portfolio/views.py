@@ -2,7 +2,6 @@ import os
 import logging
 import mimetypes
 import json
-from urllib.parse import urljoin
 
 from django.shortcuts import render
 from django.conf import settings
@@ -31,22 +30,14 @@ def _load_cert_metadata(media_dir: str) -> dict:
         logger.warning("Failed to load certificate metadata from %s: %s", meta_path, exc)
         return {}
 
-
 def _get_certificates() -> list:
-    """Scan MEDIA_ROOT/certificates for image files and return a sorted list.
-
-    Certificates are sorted newest-first by file modification time.
-    Metadata (title, issuer, issue_date, credential_id, verify_url) is
-    merged from an optional ``metadata.json`` file in the same directory.
-    """
     media_dir = os.path.join(settings.MEDIA_ROOT, 'certificates')
 
-    # Build the base URL safely, avoiding double slashes
-    base_media_url = settings.MEDIA_URL.rstrip('/')
-    media_url = base_media_url + '/certificates/'
+    # Build the certificate image URL from MEDIA_URL so the media path is always
+    # consistent with the site configuration.
+    media_url = f"{settings.MEDIA_URL.rstrip('/')}/certificates/"
 
     if not os.path.isdir(media_dir):
-        logger.info("Certificates directory not found: %s", media_dir)
         return []
 
     metadata = _load_cert_metadata(media_dir)
@@ -69,6 +60,10 @@ def _get_certificates() -> list:
             info.get('title')
             or os.path.splitext(fname)[0].replace('_', ' ').title()
         )
+        category = info.get('category', '').strip().lower()
+        if not category:
+            category = 'hackathon' if 'hackathon' in title.lower() else 'general'
+
         certs.append({
             'title': title,
             'issuer': info.get('issuer', ''),
@@ -76,9 +71,17 @@ def _get_certificates() -> list:
             'credential_id': info.get('credential_id', ''),
             'verify_url': info.get('verify_url', ''),
             'image_url': media_url + fname,
+            'category': category,
+            'index': len(certs),
         })
 
     return certs
+
+
+def _partition_certificates(certs: list) -> tuple[list, list]:
+    hackathon = [cert for cert in certs if cert.get('category') == 'hackathon']
+    other = [cert for cert in certs if cert.get('category') != 'hackathon']
+    return hackathon, other
 
 
 def _projects_data() -> list:
@@ -152,6 +155,7 @@ def home(request):
     """Render the portfolio home page."""
     projects = _projects_data()
     certs = _get_certificates()
+    hackathon_certs, other_certs = _partition_certificates(certs)
 
     context = {
         'profile_data': _profile_data(),
@@ -162,6 +166,8 @@ def home(request):
         #   {{ projects_json|json_script:"projects-data" }}
         'projects_json': json.dumps(projects, cls=DjangoJSONEncoder),
         'certificates': certs,
+        'hackathon_certificates': hackathon_certs,
+        'other_certificates': other_certs,
         'cert_count': len(certs),
         'certificates_json': json.dumps(certs, cls=DjangoJSONEncoder),
     }
@@ -171,9 +177,12 @@ def home(request):
 def certificates(request):
     """Render the standalone certificates page."""
     certs = _get_certificates()
+    hackathon_certs, other_certs = _partition_certificates(certs)
 
     context = {
         'certificates': certs,
+        'hackathon_certificates': hackathon_certs,
+        'other_certificates': other_certs,
         'cert_count': len(certs),
         'certificates_json': json.dumps(certs, cls=DjangoJSONEncoder),
     }

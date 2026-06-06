@@ -33,5 +33,13 @@
     "issue_date": "2026-01-19",
     "credential_id": "9Ebk_JXVlSCC2M-IXmGGQ",
     "verify_url": ""
+  },
+  "gen_ai_forge_hackathon.jpg": {
+    "title": "Gen-AI Forge Hackathon — 3rd Prize Winner",
+    "issuer": "MLRITM / PACE",
+    "issue_date": "2026-01-31",
+    "credential_id": "",
+    "verify_url": "",
+    "category": "hackathon"
   }
 }

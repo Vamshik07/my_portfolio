@@ -3,11 +3,10 @@
 {% block content %}
 <section class="cert-section">
   <div class="container">
-    <h2 class="section-title">Certifications <span class="count">({{ cert_count }})</span></h2>
-
+    <h2 class="section-title">Certifications <span class="count">({{ other_certificates|length }})</span></h2>
     <div id="cert-grid" class="cert-grid">
-      {% for cert in certificates %}
-      <article class="cert-card" tabindex="0" data-index="{{ forloop.counter0 }}">
+      {% for cert in other_certificates %}
+      <article class="cert-card" tabindex="0" data-index="{{ cert.index }}">
         <div class="thumb-wrap">
           <img src="{{ cert.image_url }}" alt="{{ cert.title }}" class="cert-thumb"/>
         </div>
@@ -28,6 +27,35 @@
       </article>
       {% endfor %}
     </div>
+
+    <h2 class="section-title">Hackathon Certificates <span class="count">({{ hackathon_certificates|length }})</span></h2>
+    <div id="hackathon-cert-grid" class="cert-grid">
+      {% if hackathon_certificates %}
+        {% for cert in hackathon_certificates %}
+        <article class="cert-card" tabindex="0" data-index="{{ cert.index }}">
+          <div class="thumb-wrap">
+            <img src="{{ cert.image_url }}" alt="{{ cert.title }}" class="cert-thumb"/>
+          </div>
+          <div class="meta">
+            <h3 class="cert-title">{{ cert.title }}</h3>
+            <p class="cert-issuer">{{ cert.issuer }}</p>
+            <p class="cert-date">{{ cert.issue_date }}</p>
+            {% if cert.credential_id %}
+            <p class="cert-id">ID: {{ cert.credential_id }}</p>
+            {% endif %}
+            <div class="cert-actions">
+              {% if cert.verify_url %}
+              <a class="btn-verify" href="{{ cert.verify_url }}" target="_blank" rel="noopener">Verify</a>
+              {% endif %}
+              <a class="btn-download" href="{{ cert.image_url }}" download>Download</a>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      {% else %}
+        <p style="color: #645b9a; text-align: center; padding: 24px 0;">No hackathon certificates added yet.</p>
+      {% endif %}
+    </div>
   </div>
 
   <div id="lightbox" class="lightbox" aria-hidden="true">
@@ -47,3 +75,4 @@
 </script>
 
 {% endblock %}
+

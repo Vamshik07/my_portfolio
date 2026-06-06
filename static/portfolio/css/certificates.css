@@ -18,9 +18,8 @@ html, body, .site-header, .container, .cert-section { background-image: none !im
 .cert-grid, .cert-card, .thumb-wrap, .cert-thumb { position: relative !important; z-index: 9999 !important }
 
 /* Hide any remaining full-viewport fixed overlays */
-.overlay, .page-overlay, [role="presentation"], [aria-hidden="true"] { display:none !important }
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,Segoe UI,Arial;background:linear-gradient(180deg,var(--bg),#070416);color:#e6eef8}
+body{margin:0;font-family:"Times New Roman", Times, serif;background:linear-gradient(180deg,var(--bg),#070416);color:#e6eef8}
 .site-header{position:sticky;top:0;backdrop-filter:blur(6px);background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:14px 24px;z-index:40}
 .nav{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto}
 .brand{font-weight:700;color:white;text-decoration:none}
@@ -50,14 +49,48 @@ body{margin:0;font-family:Inter,Segoe UI,Arial;background:linear-gradient(180deg
 @media(max-width:900px){.cert-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.cert-grid{grid-template-columns:1fr}}
 
-.cert-card{position:relative;background:var(--card);border-radius:14px;overflow:hidden;padding:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6);transform:translateY(12px);opacity:0;transition:transform 420ms cubic-bezier(.2,.9,.3,1),opacity 420ms,box-shadow 220ms}
-.cert-card:hover{transform:translateY(0);box-shadow:0 18px 46px rgba(11,7,34,0.8)}
-.thumb-wrap{height:200px;overflow:hidden;border-radius:10px}
-.cert-thumb{width:100%;height:100%;object-fit:cover;transform:scale(1);transition:transform 420ms ease}
-.cert-card:hover .cert-thumb{transform:scale(1.04) translateY(-4px)}
-.meta{padding:12px}
-.cert-title{margin:0 0 6px 0;font-size:16px;color:var(--accent1)}
-.cert-issuer,.cert-date{margin:0;color:rgba(255,255,255,0.7);font-size:13px}
+.cert-card {
+    position: relative;
+    background: var(--card);
+    border-radius: 14px;
+    overflow: hidden;
+    padding: 12px;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+    
+    /* FORCE THE CARDS TO BE VISIBLE IMMEDIATELY */
+    transform: translateY(0) !important;
+    opacity: 1 !important; 
+    
+    transition: transform 420ms cubic-bezier(.2,.9,.3,1), opacity 420ms, box-shadow 220ms;
+}
+
+.cert-grid .cert-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.cert-grid .cert-card .thumb-wrap {
+    flex: 0 0 180px !important;
+    width: 180px !important;
+    min-width: 180px !important;
+}
+
+.cert-grid .cert-card .meta {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+@media(max-width:900px) {
+    .cert-grid .cert-card {
+        flex-direction: column;
+    }
+    .cert-grid .cert-card .thumb-wrap {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
 
 /* reveal animation */
 .cert-card.revealed{transform:none;opacity:1}
@@ -102,3 +135,107 @@ body{margin:0;font-family:Inter,Segoe UI,Arial;background:linear-gradient(180deg
 .cert-actions{display:flex;gap:8px;margin-top:10px}
 .btn-verify{background:linear-gradient(90deg,var(--accent3),var(--accent2));padding:6px 10px;border-radius:8px;color:black;text-decoration:none;font-weight:600}
 .btn-download{background:rgba(255,255,255,0.04);padding:6px 10px;border-radius:8px;color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,0.04)}
+
+.cert-thumb {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* FORCE CONTAINER VISIBILITY */
+.thumb-wrap {
+    display: block !important;
+    height: 200px !important;
+    width: 100% !important;
+    background-color: rgba(255,255,255,0.05) !important; /* This will create a grey box behind the image to prove it's there */
+    overflow: visible !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ENSURE IMAGE FILLS CONTAINER */
+.cert-thumb {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Use the class name found in your Elements tab */
+.cert-hud-img-frame, .cert-hud-img-frame img {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    height: 200px !important;
+    width: 100% !important;
+    z-index: 99999 !important;
+}
+
+/* FORCE VISIBILITY - OVERRIDE JAVASCRIPT */
+.cert-card, .thumb-wrap, .cert-thumb {
+    opacity: 1 !important;
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    min-height: 200px !important;
+    width: 100% !important;
+    position: static !important;
+}
+
+/* Keep certificate details beside the image on desktop */
+.cert-card {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.cert-card .thumb-wrap {
+    flex: 0 0 280px !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    height: auto !important;
+}
+
+.cert-card .meta {
+    flex: 1 1 320px;
+    min-width: 0;
+}
+
+.cert-card .cert-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+@media(max-width:900px) {
+    .cert-card {
+        flex-direction: column !important;
+    }
+    .cert-card .thumb-wrap {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
+
+/* This specifically targets the cards if JS is trying to hide them */
+.cert-card.revealed {
+    opacity: 1 !important;
+}
+
+/* Force reveal animation items to be visible */
+.reveal-item, .stark-panel-card {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+}
+
+/* Ensure the image container has height so the image can be seen */
+.cert-hud-img-frame {
+    height: auto !important;
+    display: block !important;
+    visibility: visible !important;
+}

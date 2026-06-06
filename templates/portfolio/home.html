@@ -74,7 +74,7 @@
 .hero-right { flex: 0.7; min-width: 260px; }
 
 .hero-hud-title {
-    font-family: 'Orbitron', sans-serif !important;
+    font-family: "Times New Roman", Times, serif !important;
     font-size: 3.8rem;
     font-weight: 900;
     line-height: 1.0;
@@ -188,7 +188,7 @@
 }
 
 .project-card h3 {
-    font-family: 'Orbitron', sans-serif !important;
+    font-family: "Times New Roman", Times, serif !important;
     color: #ffffff;
     margin-top: 0;
     font-size: 1.2rem;
@@ -325,6 +325,7 @@
     <div class="container hero-container">
 
         <div class="hero-left">
+            <p class="hero-hud-title" style="margin: 0 0 10px 0; font-size: 3.8rem;">Hello, I am</p>
             <h1 class="hero-hud-title">VAMSHI KRISHNA AMBATI</h1>
             <p class="hero-ticker-sub">
                 Data Science student skilled in Python, SQL, Machine Learning, and Data Analytics.
@@ -348,7 +349,7 @@
                          style="width: 200px; height: 200px; border-radius: 50%;
                                 border: 2px solid #00f0ff; object-fit: cover; display: block; margin: 0 auto;">
                 </div>
-                <h3 style="margin: 10px 0 5px 0; color: #fff; font-family: 'Orbitron', sans-serif !important;">
+                <h3 style='margin: 10px 0 5px 0; color: #fff; font-family: "Times New Roman", Times, serif !important;'>
                     Vamshi Krishna Ambati
                 </h3>
                 <p style="color: #00f0ff; margin: 0 0 15px 0; font-size: 0.95rem;">
@@ -447,14 +448,16 @@
 <section id="certificates" class="certifications-section hud-section" onclick="triggerScan(this)">
     <div class="scan-trigger-line"></div>
     <div class="container">
-        <h2 class="section-title">VERIFIED CERTIFICATIONS CORE ({{ cert_count|default:"0" }})</h2>
+        <h2 class="section-title">VERIFIED CERTIFICATIONS CORE ({{ other_certificates|length }})</h2>
         <div style="width: 100%; max-width: 1000px; margin: 0 auto;">
-            {% for cert in certificates %}
+            {% for cert in other_certificates %}
             <div class="stark-panel-card certificate-hud-card">
                 {% if cert.image_url %}
-                <div class="cert-hud-img-frame">
-                    <img src="{{ cert.image_url }}" alt="{{ cert.title }}">
-                </div>
+                <button type="button" class="cert-hud-img-link cert-hud-img-button" data-image="{{ cert.image_url }}" data-title="{{ cert.title }}">
+                    <div class="cert-hud-img-frame">
+                        <img src="{{ cert.image_url }}" alt="{{ cert.title }}">
+                    </div>
+                </button>
                 {% endif %}
                 <div style="flex: 1; text-align: left; min-width: 200px;">
                     <h3 style="margin: 0 0 4px 0; color: #ffffff; font-size: 1.15rem;">{{ cert.title }}</h3>
@@ -467,7 +470,7 @@
                     </p>
                     {% endif %}
                     {% if cert.credential_id %}
-                    <p style="margin: 0; color: #00f0ff; font-family: monospace; font-size: 0.8rem;">
+                    <p style='margin: 0; color: #00f0ff; font-family: "Times New Roman", Times, serif !important; font-size: 0.8rem;'>
                         REF_ID: {{ cert.credential_id }}
                     </p>
                     {% endif %}
@@ -486,12 +489,181 @@
                     </div>
                 </div>
             </div>
-            {% empty %}
-            <p style="color: #645b9a; text-align: center;">NO STORAGE FILES IN PATH: MEDIA/CERTIFICATES/</p>
             {% endfor %}
+        </div>
+
+        <h2 class="section-title">HACKATHON CERTIFICATES ({{ hackathon_certificates|length }})</h2>
+        <div style="width: 100%; max-width: 1000px; margin: 0 auto;">
+            {% if hackathon_certificates %}
+                {% for cert in hackathon_certificates %}
+                <div class="stark-panel-card certificate-hud-card">
+                    {% if cert.image_url %}
+                    <button type="button" class="cert-hud-img-link cert-hud-img-button" data-image="{{ cert.image_url }}" data-title="{{ cert.title }}">
+                        <div class="cert-hud-img-frame">
+                            <img src="{{ cert.image_url }}" alt="{{ cert.title }}">
+                        </div>
+                    </button>
+                    {% endif %}
+                    <div style="flex: 1; text-align: left; min-width: 200px;">
+                        <h3 style="margin: 0 0 4px 0; color: #ffffff; font-size: 1.15rem;">{{ cert.title }}</h3>
+                        <p style="margin: 0; color: #ff5f00; font-weight: bold; font-size: 0.9rem;">
+                            ISSUER: {{ cert.issuer|default:"System Logged" }}
+                        </p>
+                        {% if cert.issue_date %}
+                        <p style="margin: 2px 0; color: #645b9a; font-size: 0.85rem;">
+                            DATE ACCESSED: {{ cert.issue_date }}
+                        </p>
+                        {% endif %}
+                        {% if cert.credential_id %}
+                        <p style='margin: 0; color: #00f0ff; font-family: "Times New Roman", Times, serif !important; font-size: 0.8rem;'>
+                            REF_ID: {{ cert.credential_id }}
+                        </p>
+                        {% endif %}
+                        <div style="margin-top: 10px;">
+                            {% if cert.verify_url %}
+                            <a href="{{ cert.verify_url }}" target="_blank" class="cert-hud-btn-verify">
+                                VERIFY SIGNATURE
+                            </a>
+                            {% endif %}
+                            <a href="{{ cert.image_url }}" download class="cert-hud-btn-download">
+                                <svg style="width:14px; height:14px; fill:currentColor; vertical-align:middle;" viewBox="0 0 24 24">
+                                    <path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+                                </svg>
+                                DOWNLOAD
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: #645b9a; text-align: center; padding: 24px 0;">No hackathon certificates added yet.</p>
+            {% endif %}
         </div>
     </div>
 </section>
+
+<div id="cert-lightbox" class="cert-lightbox" aria-hidden="true">
+    <div class="cert-lightbox-backdrop"></div>
+    <div class="cert-lightbox-panel">
+        <button id="cert-lightbox-close" class="cert-lightbox-close" aria-label="Close image viewer">✕</button>
+        <img id="cert-lightbox-image" src="" alt="" class="cert-lightbox-img" />
+        <div id="cert-lightbox-caption" class="cert-lightbox-caption"></div>
+    </div>
+</div>
+
+<style>
+.cert-hud-img-button {
+    background: none;
+    border: none;
+    padding: 0;
+    display: inline-block;
+    width: auto;
+    min-width: 180px;
+    cursor: pointer;
+}
+.certificate-hud-card .cert-hud-img-frame {
+    width: 180px;
+    height: 120px;
+}
+.cert-lightbox {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+.cert-lightbox[aria-hidden="false"] {
+    display: flex;
+}
+.cert-lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+}
+.cert-lightbox-panel {
+    position: relative;
+    max-width: 92vw;
+    max-height: 92vh;
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(10, 10, 18, 0.95);
+    box-shadow: 0 24px 90px rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1;
+}
+.cert-lightbox-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+.cert-lightbox-img {
+    max-width: 88vw;
+    max-height: 76vh;
+    object-fit: contain;
+    border-radius: 10px;
+}
+.cert-lightbox-caption {
+    color: #e0f7ff;
+    font-size: 0.95rem;
+    text-align: center;
+    word-break: break-word;
+}
+</style>
+
+<script>
+(function() {
+    const lightbox = document.getElementById('cert-lightbox');
+    const lightboxImage = document.getElementById('cert-lightbox-image');
+    const lightboxCaption = document.getElementById('cert-lightbox-caption');
+    const closeButton = document.getElementById('cert-lightbox-close');
+    const imageButtons = document.querySelectorAll('.cert-hud-img-button');
+
+    if (!lightbox || !lightboxImage || !closeButton) return;
+
+    function openLightbox(src, caption) {
+        lightboxImage.src = src;
+        lightboxImage.alt = caption || 'Certificate image';
+        lightboxCaption.textContent = caption || '';
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        lightbox.setAttribute('aria-hidden', 'true');
+        lightboxImage.src = '';
+        document.body.style.overflow = '';
+    }
+
+    imageButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            openLightbox(this.dataset.image, this.dataset.title);
+        });
+    });
+
+    closeButton.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function(event) {
+        if (event.target === lightbox || event.target === document.querySelector('.cert-lightbox-backdrop')) {
+            closeLightbox();
+        }
+    });
+    document.addEventListener('keydown', function(event) {
+        if (lightbox.getAttribute('aria-hidden') === 'false' && event.key === 'Escape') {
+            closeLightbox();
+        }
+    });
+})();
+</script>
 
 
 <!-- EDUCATION -->
@@ -517,7 +689,7 @@
                 <p style="color: #fff; margin: 0;">Annamacharya Institute of Technology</p>
             </div>
         </div>
-        <h3 style="margin-top: 40px; font-family: 'Orbitron', sans-serif !important; color: #fff;">
+        <h3 style='margin-top: 40px; font-family: "Times New Roman", Times, serif !important; color: #fff;'>
             LANGUAGES COMPILER
         </h3>
         <div class="lang-chips">
@@ -576,8 +748,8 @@
                     <div style="color: #ff5f00; font-size: 0.8rem; letter-spacing: 1px;">LINKEDIN_AUTH</div>
                 </div>
                 <div style="font-size: 1.1rem; font-weight: bold; margin-top: 5px;">
-                    <a href="https://linkedin.com/in/VamshiKrishna" target="_blank"
-                       style="color: #00f0ff; text-decoration: none;">VamshiKrishna / LinkedIn</a>
+                    <a href="https://www.linkedin.com/in/vamshi-krishna-ambati-20800a3b6/" target="_blank"
+                       style="color: #00f0ff; text-decoration: none;">vamshi-krishna-ambati-20800a3b6 / LinkedIn</a>
                 </div>
             </div>
 
