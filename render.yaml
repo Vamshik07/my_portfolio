@@ -3,7 +3,7 @@ services:
     name: portfolio
     runtime: python
     plan: free
-    buildCommand: './build.sh'
+    buildCommand: 'pip install -r requirements.txt && python manage.py collectstatic --noinput'
     startCommand: 'gunicorn config.wsgi'
     envVars:
       - key: DEBUG

@@ -138,5 +138,5 @@ import os
 # Change DEBUG to False for production
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# Static files storage for WhiteNoise
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Use simple static files storage for production (WhiteNoise handles compression)
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage' if not DEBUG else 'django.contrib.staticfiles.storage.StaticFilesStorage'
