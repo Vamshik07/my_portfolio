@@ -1,0 +1,634 @@
+{% extends 'portfolio/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+/* ─── SCAN EFFECT ─────────────────────────────────────────────── */
+.hud-section {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.scan-trigger-line {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+}
+
+.scan-trigger-line.active {
+    opacity: 1;
+    animation: scan-effect 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes scan-effect {
+    0%   { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* ─── STARK PANEL CARD ────────────────────────────────────────── */
+.stark-panel-card {
+    position: relative;
+    background: rgba(0, 240, 255, 0.03);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    padding: 24px;
+    border-radius: 2px;
+}
+
+.stark-panel-card::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 12px; height: 12px;
+    border-top: 3px solid #ff5f00;
+    border-left: 3px solid #ff5f00;
+}
+
+.stark-panel-card::after {
+    content: "";
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 12px; height: 12px;
+    border-bottom: 3px solid #ff5f00;
+    border-right: 3px solid #ff5f00;
+}
+
+/* ─── HERO ────────────────────────────────────────────────────── */
+.hero-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.hero-left  { flex: 1.3; min-width: 280px; }
+.hero-right { flex: 0.7; min-width: 260px; }
+
+.hero-hud-title {
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: 3.8rem;
+    font-weight: 900;
+    line-height: 1.0;
+    margin: 0 0 20px 0;
+    color: #ffffff !important;
+    text-shadow: 0 0 20px rgba(255,255,255,0.3);
+}
+
+.hero-ticker-sub {
+    font-size: 1.15rem;
+    color: #b5b2cf;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    border-left: 2px solid #00f0ff;
+    padding-left: 15px;
+}
+
+/* ─── BUTTONS ─────────────────────────────────────────────────── */
+.hud-btn-primary {
+    background: linear-gradient(135deg, rgba(255,95,0,0.2) 0%, rgba(255,95,0,0.4) 100%);
+    border: 1px solid #ff5f00;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 12px 28px;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 2px;
+    box-shadow: 0 0 15px rgba(255,95,0,0.2);
+    transition: background 0.2s, box-shadow 0.2s;
+    display: inline-block;
+}
+
+.hud-btn-primary:hover {
+    background: #ff5f00;
+    box-shadow: 0 0 25px #ff5f00;
+    color: #fff;
+    text-decoration: none;
+}
+
+.hud-view-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid #00f0ff;
+    color: #00f0ff;
+    padding: 8px 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+    margin-top: 15px;
+    box-sizing: border-box;
+}
+
+.hud-view-link:hover {
+    background: #00f0ff;
+    color: #020107;
+    box-shadow: 0 0 15px #00f0ff;
+    text-decoration: none;
+}
+
+/* ─── SKILLS ──────────────────────────────────────────────────── */
+.skills-matrix-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+    width: 100%;
+}
+
+.skill-node {
+    background: rgba(0, 240, 255, 0.03);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    padding: 12px;
+    text-align: center;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    color: #00f0ff;
+    border-radius: 2px;
+    position: relative;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.skill-node:hover {
+    background: rgba(0, 240, 255, 0.15);
+    border-color: #00f0ff;
+    text-shadow: 0 0 8px #00f0ff;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.skill-node::after {
+    content: "///";
+    position: absolute;
+    bottom: 2px; right: 4px;
+    font-size: 0.5rem;
+    color: #ff5f00;
+}
+
+/* ─── PROJECTS ────────────────────────────────────────────────── */
+.project-matrix-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 30px;
+    width: 100%;
+}
+
+.project-card h3 {
+    font-family: 'Orbitron', sans-serif !important;
+    color: #ffffff;
+    margin-top: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tech-pill-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.tech-pill {
+    background: rgba(255, 95, 0, 0.1);
+    border: 1px solid rgba(255, 95, 0, 0.4);
+    color: #ff5f00;
+    padding: 3px 8px;
+    font-size: 0.85rem;
+    border-radius: 2px;
+}
+
+/* ─── CERTIFICATES ────────────────────────────────────────────── */
+.certificate-hud-card {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.cert-hud-img-frame {
+    width: 150px;
+    height: 100px;
+    border: 1px solid rgba(0,240,255,0.3);
+    background: #020107;
+    padding: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cert-hud-img-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.cert-hud-btn-verify {
+    background: linear-gradient(135deg, #00f0ff 0%, #0088ff 100%);
+    color: #020107;
+    padding: 6px 16px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(0,240,255,0.3);
+    display: inline-block;
+}
+
+.cert-hud-btn-download {
+    border: 1px solid #ff5f00;
+    color: #ff5f00;
+    padding: 5px 15px;
+    text-decoration: none;
+    border-radius: 2px;
+    margin-left: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ─── CONTACT ─────────────────────────────────────────────────── */
+.contact-hud-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.contact-header-layout {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 5px;
+}
+
+.contact-svg-icon {
+    width: 20px; height: 20px;
+    fill: #ff5f00;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.brand-linkedin { fill: #0077b5 !important; }
+.brand-github   { fill: #ffffff  !important; }
+.brand-gmail    { fill: #ea4335  !important; }
+
+/* ─── LANGUAGE CHIPS ──────────────────────────────────────────── */
+.lang-chips {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.lang-chip {
+    border: 1px dashed #00f0ff;
+    color: #ffffff;
+    padding: 6px 16px;
+    font-size: 1rem;
+    background: rgba(0, 240, 255, 0.05);
+}
+
+.hero-stats-row {
+    display: flex;
+    justify-content: space-around;
+    margin: 15px 0;
+    border-top: 1px solid rgba(0,240,255,0.2);
+    padding-top: 15px;
+}
+
+.hero-stat-item { text-align: center; }
+
+</style>
+
+
+<!-- HERO -->
+<section class="hero">
+    <div class="container hero-container">
+
+        <div class="hero-left">
+            <h1 class="hero-hud-title">VAMSHI KRISHNA AMBATI</h1>
+            <p class="hero-ticker-sub">
+                Data Science student skilled in Python, SQL, Machine Learning, and Data Analytics.
+                Built AI-powered projects in healthcare and predictive analytics, with a strong focus
+                on problem-solving, scalable solutions, and real-world impact.
+            </p>
+            <div style="margin-top: 35px; display: flex; gap: 15px; flex-wrap: wrap;">
+                <a href="#contact" class="hud-btn-primary">Initialize Contact</a>
+                <a href="#projects" class="hud-btn-primary"
+                   style="background: transparent; border-color: #00f0ff; color: #00f0ff; box-shadow: none;">
+                    View Project Modules
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="stark-panel-card" style="text-align: center;">
+                <div style="margin-bottom: 20px;">
+                    <img src="{% static 'portfolio/images/passport.jpg' %}"
+                         alt="Vamshi Krishna Ambati"
+                         style="width: 200px; height: 200px; border-radius: 50%;
+                                border: 2px solid #00f0ff; object-fit: cover; display: block; margin: 0 auto;">
+                </div>
+                <h3 style="margin: 10px 0 5px 0; color: #fff; font-family: 'Orbitron', sans-serif !important;">
+                    Vamshi Krishna Ambati
+                </h3>
+                <p style="color: #00f0ff; margin: 0 0 15px 0; font-size: 0.95rem;">
+                    STATUS: AVAILABLE FOR INTERNSHIP
+                </p>
+                <div class="hero-stats-row">
+                    <div class="hero-stat-item">
+                        <strong style="color: #fff; font-size: 1.3rem;">{{ projects|length }}</strong><br>
+                        <span style="font-size: 0.8rem; color: #645b9a;">PROJECTS</span>
+                    </div>
+                    <div class="hero-stat-item">
+                        <strong style="color: #fff; font-size: 1.3rem;">{{ cert_count|default:"0" }}</strong><br>
+                        <span style="font-size: 0.8rem; color: #645b9a;">CERTIFICATES</span>
+                    </div>
+                    <div class="hero-stat-item">
+                        <strong style="color: #fff; font-size: 1.3rem;">3rd</strong><br>
+                        <span style="font-size: 0.8rem; color: #645b9a;">HACKATHON</span>
+                    </div>
+                </div>
+                <a href="/resume/" target="_blank" class="hud-view-link" style="margin-top: 10px;">
+                    <svg style="width:16px; height:16px; fill:#00f0ff;" viewBox="0 0 24 24">
+                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                    </svg>
+                    EXPORT RESUME.DOCX
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- SKILLS -->
+<section id="skills" class="skills-section hud-section" onclick="triggerScan(this)">
+    <div class="scan-trigger-line"></div>
+    <div class="container">
+        <h2 class="section-title">SYSTEM SKILLS COMPILER</h2>
+        <div class="skills-matrix-grid">
+            {% for s in profile_data.skills %}
+                <div class="skill-node">{{ s }}</div>
+            {% empty %}
+                <div class="skill-node">Python</div>
+                <div class="skill-node">SQL</div>
+                <div class="skill-node">Machine Learning</div>
+                <div class="skill-node">FastAPI</div>
+                <div class="skill-node">LLM APIs</div>
+                <div class="skill-node">Git</div>
+                <div class="skill-node">Data Analytics</div>
+                <div class="skill-node">LangGraph</div>
+                <div class="skill-node">React</div>
+                <div class="skill-node">MongoDB</div>
+                <div class="skill-node">Gemini AI</div>
+                <div class="skill-node">OCR</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+<!-- PROJECTS -->
+<section id="projects" class="projects-section hud-section" onclick="triggerScan(this)">
+    <div class="scan-trigger-line"></div>
+    <div class="container">
+        <h2 class="section-title">ACTIVE OPERATION PROJECTS</h2>
+        <div class="project-matrix-grid">
+            {% for p in projects %}
+            <div class="stark-panel-card project-card">
+                <h3>
+                    <svg style="width:20px; height:20px; fill:#00f0ff; flex-shrink:0;" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L11 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                    </svg>
+                    {{ p.title }}
+                </h3>
+                <p style="color: #b5b2cf; font-size: 0.95rem; line-height: 1.5; min-height: 80px;">
+                    {{ p.description }}
+                </p>
+                <div class="tech-pill-wrapper">
+                    {% for t in p.technologies %}
+                        <span class="tech-pill">{{ t }}</span>
+                    {% endfor %}
+                </div>
+                <a href="{{ p.repo|default:'#' }}" target="_blank" class="hud-view-link">
+                    <svg style="width:16px; height:16px; fill:currentColor;" viewBox="0 0 24 24">
+                        <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.1.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.65.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+                    </svg>
+                    ACCESS SOURCE RIG
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+<!-- CERTIFICATES -->
+<section id="certificates" class="certifications-section hud-section" onclick="triggerScan(this)">
+    <div class="scan-trigger-line"></div>
+    <div class="container">
+        <h2 class="section-title">VERIFIED CERTIFICATIONS CORE ({{ cert_count|default:"0" }})</h2>
+        <div style="width: 100%; max-width: 1000px; margin: 0 auto;">
+            {% for cert in certificates %}
+            <div class="stark-panel-card certificate-hud-card">
+                {% if cert.image_url %}
+                <div class="cert-hud-img-frame">
+                    <img src="{{ cert.image_url }}" alt="{{ cert.title }}">
+                </div>
+                {% endif %}
+                <div style="flex: 1; text-align: left; min-width: 200px;">
+                    <h3 style="margin: 0 0 4px 0; color: #ffffff; font-size: 1.15rem;">{{ cert.title }}</h3>
+                    <p style="margin: 0; color: #ff5f00; font-weight: bold; font-size: 0.9rem;">
+                        ISSUER: {{ cert.issuer|default:"System Logged" }}
+                    </p>
+                    {% if cert.issue_date %}
+                    <p style="margin: 2px 0; color: #645b9a; font-size: 0.85rem;">
+                        DATE ACCESSED: {{ cert.issue_date }}
+                    </p>
+                    {% endif %}
+                    {% if cert.credential_id %}
+                    <p style="margin: 0; color: #00f0ff; font-family: monospace; font-size: 0.8rem;">
+                        REF_ID: {{ cert.credential_id }}
+                    </p>
+                    {% endif %}
+                    <div style="margin-top: 10px;">
+                        {% if cert.verify_url %}
+                        <a href="{{ cert.verify_url }}" target="_blank" class="cert-hud-btn-verify">
+                            VERIFY SIGNATURE
+                        </a>
+                        {% endif %}
+                        <a href="{{ cert.image_url }}" download class="cert-hud-btn-download">
+                            <svg style="width:14px; height:14px; fill:currentColor; vertical-align:middle;" viewBox="0 0 24 24">
+                                <path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+                            </svg>
+                            DOWNLOAD
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p style="color: #645b9a; text-align: center;">NO STORAGE FILES IN PATH: MEDIA/CERTIFICATES/</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+<!-- EDUCATION -->
+<section id="education" class="education-section hud-section" onclick="triggerScan(this)">
+    <div class="scan-trigger-line"></div>
+    <div class="container">
+        <h2 class="section-title">ACADEMIC DATA REGISTRY</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 30px; width: 100%;">
+            <div class="stark-panel-card">
+                <h3 style="color: #ff5f00; margin-bottom: 5px; font-size: 1rem;">
+                    B. TECH – COMPUTER SCIENCE AND DATA SCIENCE
+                </h3>
+                <div style="color: #645b9a; margin-bottom: 10px;">JULY 2024 – PRESENT</div>
+                <p style="color: #fff; margin: 0;">
+                    Marri Laxman Reddy Institute of Technology And Management, Hyderabad
+                </p>
+            </div>
+            <div class="stark-panel-card">
+                <h3 style="color: #ff5f00; margin-bottom: 5px; font-size: 1rem;">
+                    DIPLOMA – ELECTRONICS AND COMMUNICATION ENGINEERING
+                </h3>
+                <div style="color: #645b9a; margin-bottom: 10px;">2021 – 2024</div>
+                <p style="color: #fff; margin: 0;">Annamacharya Institute of Technology</p>
+            </div>
+        </div>
+        <h3 style="margin-top: 40px; font-family: 'Orbitron', sans-serif !important; color: #fff;">
+            LANGUAGES COMPILER
+        </h3>
+        <div class="lang-chips">
+            <span class="lang-chip">TELUGU</span>
+            <span class="lang-chip">HINDI</span>
+            <span class="lang-chip">ENGLISH</span>
+        </div>
+    </div>
+</section>
+
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section hud-section" onclick="triggerScan(this)">
+    <div class="scan-trigger-line"></div>
+    <div class="container">
+        <h2 class="section-title">OPEN COMM CHANNELS</h2>
+        <div class="contact-hud-grid">
+
+            <div class="stark-panel-card">
+                <div class="contact-header-layout">
+                    <svg class="contact-svg-icon" viewBox="0 0 24 24">
+                        <path d="M6.62 10.79a15.15 15.15 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                    </svg>
+                    <div style="color: #ff5f00; font-size: 0.8rem; letter-spacing: 1px;">VOICE_PORT</div>
+                </div>
+                <div style="font-size: 1.3rem; font-weight: bold; color: #fff; margin-top: 5px;">+91 8688904629</div>
+            </div>
+
+            <div class="stark-panel-card">
+                <div class="contact-header-layout">
+                    <svg class="contact-svg-icon brand-gmail" viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                    <div style="color: #ff5f00; font-size: 0.8rem; letter-spacing: 1px;">GMAIL_ROUTE</div>
+                </div>
+                <div style="font-size: 1.1rem; font-weight: bold; color: #fff; margin-top: 5px; word-break: break-all;">
+                    ambativamshi743@gmail.com
+                </div>
+            </div>
+
+            <div class="stark-panel-card">
+                <div class="contact-header-layout">
+                    <svg class="contact-svg-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                    <div style="color: #ff5f00; font-size: 0.8rem; letter-spacing: 1px;">NODE_LOCATION</div>
+                </div>
+                <div style="font-size: 1.3rem; font-weight: bold; color: #fff; margin-top: 5px;">Hyderabad, India</div>
+            </div>
+
+            <div class="stark-panel-card">
+                <div class="contact-header-layout">
+                    <svg class="contact-svg-icon brand-linkedin" viewBox="0 0 24 24">
+                        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                    </svg>
+                    <div style="color: #ff5f00; font-size: 0.8rem; letter-spacing: 1px;">LINKEDIN_AUTH</div>
+                </div>
+                <div style="font-size: 1.1rem; font-weight: bold; margin-top: 5px;">
+                    <a href="https://linkedin.com/in/VamshiKrishna" target="_blank"
+                       style="color: #00f0ff; text-decoration: none;">VamshiKrishna / LinkedIn</a>
+                </div>
+            </div>
+
+            <div class="stark-panel-card">
+                <div class="contact-header-layout">
+                    <svg class="contact-svg-icon brand-github" viewBox="0 0 24 24">
+                        <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.1.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.65.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+                    </svg>
+                    <div style="color: #ff5f00; font-size: 0.8rem; letter-spacing: 1px;">GITHUB_CENTRAL</div>
+                </div>
+                <div style="font-size: 1.1rem; font-weight: bold; margin-top: 5px;">
+                    <a href="https://github.com/Vamshik07" target="_blank"
+                       style="color: #00f0ff; text-decoration: none;">Vamshik07 / GitHub</a>
+                </div>
+            </div>
+
+            <div class="stark-panel-card">
+                <div class="contact-header-layout">
+                    <svg class="contact-svg-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                    </svg>
+                    <div style="color: #ff5f00; font-size: 0.8rem; letter-spacing: 1px;">SYSTEM_STATUS</div>
+                </div>
+                <div style="font-size: 1.1rem; font-weight: bold; color: #00f0ff; margin-top: 5px;">
+                    ● AVAILABLE FOR INTERNSHIP
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer style="text-align: center; padding: 40px 24px;
+               border-top: 1px solid rgba(0,240,255,0.1);
+               width: 100%; color: #645b9a;
+               z-index: 5; position: relative;">
+    © {% now "Y" %} VAMSHI KRISHNA AMBATI — PORTFOLIO INTERFACE WORKFLOW COMPLETE.
+</footer>
+
+
+<script>
+function triggerScan(section) {
+    const line = section.querySelector('.scan-trigger-line');
+    if (!line) return;
+    line.classList.remove('active');
+    void line.offsetWidth;
+    line.classList.add('active');
+    setTimeout(() => line.classList.remove('active'), 650);
+}
+</script>
+
+{% endblock %}

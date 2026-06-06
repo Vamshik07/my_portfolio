@@ -1,0 +1,16 @@
+{
+  "StockGro_certificate.jpg": {
+    "title": "Research Analyst Certification Program, 2026",
+    "issuer": "StockGro Academy",
+    "issue_date": "2026-01-15",
+    "credential_id": "",
+    "verify_url": ""
+  },
+  "internshala_certificate.jpg": {
+    "title": "Certificate of Training - Programming with Python",
+    "issuer": "Internshala Trainings",
+    "issue_date": "2025-02-24",
+    "credential_id": "c8vz9O5e253",
+    "verify_url": "https://trainings.internshala.com/verify_certificate"
+  }
+}

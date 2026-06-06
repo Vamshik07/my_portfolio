@@ -1,0 +1,49 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<section class="cert-section">
+  <div class="container">
+    <h2 class="section-title">Certifications <span class="count">({{ cert_count }})</span></h2>
+
+    <div id="cert-grid" class="cert-grid">
+      {% for cert in certificates %}
+      <article class="cert-card" tabindex="0" data-index="{{ forloop.counter0 }}">
+        <div class="thumb-wrap">
+          <img src="{{ cert.image_url }}" alt="{{ cert.title }}" class="cert-thumb"/>
+        </div>
+        <div class="meta">
+          <h3 class="cert-title">{{ cert.title }}</h3>
+          <p class="cert-issuer">{{ cert.issuer }}</p>
+          <p class="cert-date">{{ cert.issue_date }}</p>
+          {% if cert.credential_id %}
+          <p class="cert-id">ID: {{ cert.credential_id }}</p>
+          {% endif %}
+          <div class="cert-actions">
+            {% if cert.verify_url %}
+            <a class="btn-verify" href="{{ cert.verify_url }}" target="_blank" rel="noopener">Verify</a>
+            {% endif %}
+            <a class="btn-download" href="{{ cert.image_url }}" download>Download</a>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button id="lb-close" class="lb-close">✕</button>
+    <button id="lb-prev" class="lb-nav lb-prev">◀</button>
+    <button id="lb-next" class="lb-nav lb-next">▶</button>
+    <div class="lb-content">
+      <img id="lb-image" src="" alt="" />
+      <div id="lb-caption" class="lb-caption"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // inject certificates data as JS object for optional client-side features
+  window.CERTIFICATES = {{ certificates_json|safe }};
+</script>
+
+{% endblock %}

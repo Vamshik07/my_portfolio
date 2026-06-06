@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VAMSHI KRISHNA AMBATI — PORTFOLIO HUD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Share Tech Mono', monospace !important;
+    }
+    
+    html {
+      scroll-behavior: smooth !important;
+      background-color: #03020a;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 50%, #070614 0%, #020107 100%);
+      color: #00f0ff;
+      margin: 0;
+      padding-top: 90px;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: " ";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 30px 30px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    header.site-header {
+      position: fixed;    
+      top: 0; left: 0; width: 100%;
+      background: rgba(4, 3, 12, 0.95); 
+      border-bottom: 2px solid #00f0ff;
+      z-index: 999999;   
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+    }
+
+    .nav.container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 12px 24px;
+    }
+
+    .brand-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .brand-wrapper .brand {
+      font-family: 'Orbitron', sans-serif !important;
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #00f0ff;
+    }
+
+    .header-social-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-social-icon {
+      width: 18px;
+      height: 18px;
+      fill: #00f0ff;
+      transition: transform 0.2s, fill 0.2s;
+    }
+
+    .header-social-links a:hover .header-social-icon {
+      fill: #ffffff;
+      transform: scale(1.1);
+    }
+
+    .nav-links {
+      display: flex; list-style: none; gap: 24px; margin: 0; padding: 0;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: #00f0ff;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.2s ease-in-out;
+      padding: 6px 12px;
+      border: 1px solid transparent;
+    }
+
+    .nav-links a:hover {
+      color: #ffffff;
+      background: rgba(0, 240, 255, 0.1);
+      border-color: #00f0ff;
+      text-shadow: 0 0 10px #00f0ff;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+    }
+
+    .badge {
+      background: #ff5f00 !important;
+      color: white;
+      padding: 2px 7px;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      box-shadow: 0 0 8px #ff5f00;
+      margin-left: 4px;
+    }
+
+    .hero, .education-section, .skills-section, .projects-section, .certifications-section, .contact-section {
+      min-height: calc(100vh - 90px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 80px 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif !important;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #ffffff;
+      font-size: 2.2rem;
+      letter-spacing: 3px;
+      margin-bottom: 40px;
+      text-align: left;
+      border-left: 4px solid #ff5f00;
+      padding-left: 15px;
+      text-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      width: 100%;
+    }
+
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+    .reveal-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav container">
+      <div class="brand-wrapper">
+        <a class="brand" href="#main">VAMSHI KRISHNA AMBATI</a>
+        
+        <div class="header-social-links">
+          <a href="https://github.com/Vamshik07" target="_blank" aria-label="GitHub">
+            <svg class="header-social-icon" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.1.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.65.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+          </a>
+          <a href="https://linkedin.com/in/VamshiKrishna" target="_blank" aria-label="LinkedIn">
+            <svg class="header-social-icon" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <ul class="nav-links">
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#certificates">Certs<span class="badge">{{ cert_count|default:"0" }}</span></a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const selectors = ['.project-card', '.edu-card', '.skill-node', '.certificate-hud-card', '.contact-field-frame'];
+      document.querySelectorAll(selectors.join(',')).forEach(el => el.classList.add('reveal-item'));
+
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, { threshold: 0.05 });
+
+      document.querySelectorAll('.reveal-item').forEach(item => obs.observe(item));
+    });
+  </script>
+</body>
+</html>
