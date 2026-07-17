@@ -92,6 +92,26 @@ def _projects_data() -> list:
     """
     return [
         {
+            'title': 'Personalized Learning Coach Agent',
+            'repo': 'https://github.com/Vamshik07/Personalized-learning-coach-Agent',
+            'description': (
+                'A modern, adaptive learning platform inspired by Duolingo-style personalized study. '
+                'It features AI-generated quizzes with adaptive difficulty, smart spaced repetition revisions, '
+                'automated flashcards, weakness detection, and chat-based AI tutoring.'
+            ),
+            'technologies': ['Next.js 15', 'React 19', 'TypeScript', 'Tailwind CSS', 'OpenAI API', 'Prisma ORM', 'PostgreSQL'],
+        },
+        {
+            'title': 'Resume Evaluator',
+            'repo': 'https://github.com/Vamshik07/Resume_evaluator',
+            'description': (
+                'An AI-powered resume evaluation system designed to automate resume screening against job '
+                'requirements at scale. It provides relevance scores (0-100), identifies missing skills, '
+                'and generates personalized improvement feedback.'
+            ),
+            'technologies': ['FastAPI', 'Streamlit', 'Google Gemini', 'LangChain', 'spaCy', 'Sentence Transformers', 'ChromaDB'],
+        },
+        {
             'title': 'Blood Donation Management System',
             'repo': 'https://github.com/Vamshik07/blood-donation-management-system',
             'description': (
@@ -135,10 +155,11 @@ def _profile_data() -> dict:
         'headline': 'Vamshi Krishna Ambati',
         'skills': [
             'Python', 'Java', 'SQL', 'C', 'HTML5', 'CSS3', 'JavaScript',
-            'Flutter', 'Flask', 'FastAPI', 'REST APIs', 'MySQL',
-            'Machine Learning', 'Pandas', 'NumPy', 'LLM APIs',
-            'LangGraph', 'Google Gemini', 'Git', 'GitHub', 'Postman',
-            'VS Code', 'Power BI', 'Excel',
+            'TypeScript', 'Next.js', 'React', 'Tailwind CSS', 'Flutter',
+            'Flask', 'FastAPI', 'REST APIs', 'MySQL', 'PostgreSQL', 'Prisma ORM',
+            'Machine Learning', 'Pandas', 'NumPy', 'LLM APIs', 'OpenAI API',
+            'Google Gemini', 'LangGraph', 'Streamlit', 'ChromaDB', 'Git',
+            'GitHub', 'Postman', 'VS Code', 'Power BI', 'Excel',
         ],
         'contact': {
             'emails': ['ambativamshi743@gmail.com'],

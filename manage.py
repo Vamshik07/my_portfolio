@@ -6,6 +6,19 @@ import sys
 
 def main():
     """Run administrative tasks."""
+    import shutil
+    from pathlib import Path
+    base_dir = Path(__file__).resolve().parent
+    src = base_dir / 'static' / 'portfolio' / 'images' / 'passport.jpg'
+    dst = base_dir / 'staticfiles' / 'portfolio' / 'images' / 'passport.jpg'
+    if src.exists():
+        try:
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dst)
+            print("[Antigravity] Auto-copied new picture to staticfiles.")
+        except Exception as e:
+            print(f"[Antigravity] Error copying picture: {e}")
+
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
     try:
         from django.core.management import execute_from_command_line
